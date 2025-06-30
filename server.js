@@ -26,7 +26,7 @@ app.get("/", async (req, res) => {
       waitUntil: "networkidle2",
     });
 
-    // ⏱ Wait for posts to load (Puppeteer doesn't have waitForTimeout)
+    // ⏱ Wait for posts to load
     await new Promise(resolve => setTimeout(resolve, 8000));
 
     const latestPost = await page.evaluate(() => {
@@ -53,6 +53,7 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+// ✅ Bind to 0.0.0.0 for Render/public hosting
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
 });
