@@ -5,7 +5,7 @@ const axios = require("axios");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const WEBHOOK_URL = "https://n8n-fk9q.onrender.com/webhook-test/receive-post";
+const WEBHOOK_URL = "https://n8n-fk9q.onrender.com/webhook-test/2d3cd888-0746-4977-a15a-7885825a89fd";
 
 app.get("/", async (req, res) => {
   console.log("🔁 Trigger received. Scraping...");
