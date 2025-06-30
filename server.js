@@ -7,7 +7,19 @@ const PORT = process.env.PORT || 3000;
 
 const WEBHOOK_URL = "https://n8n-fk9q.onrender.com/webhook-test/2d3cd888-0746-4977-a15a-7885825a89fd";
 
-app.get("/", async (req, res) => {
+// ✅ Health check endpoint for Render
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
+// ✅ Non-blocking root trigger
+app.get("/", (req, res) => {
+  res.status(200).send("Scraping triggered ✅");
+  runScraper();
+});
+
+// ✅ Scraping logic
+async function runScraper() {
   console.log("🔁 Trigger received. Scraping...");
 
   try {
@@ -43,17 +55,15 @@ app.get("/", async (req, res) => {
     if (!latestPost.startsWith("⚠️")) {
       const response = await axios.post(WEBHOOK_URL, { post: latestPost });
       console.log("✅ Sent to n8n:", response.status);
-      res.json({ status: "Sent to n8n", post: latestPost });
     } else {
-      res.json({ status: "No post found" });
+      console.warn("⚠️ No post found");
     }
   } catch (err) {
     console.error("❌ Scraping failed:", err.message);
-    res.status(500).json({ error: err.message });
   }
-});
+}
 
-// ✅ Bind to 0.0.0.0 for Render/public hosting
+// ✅ Bind to 0.0.0.0 for Render
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on http://0.0.0.0:${PORT}`);
 });
